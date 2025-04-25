@@ -44,6 +44,12 @@ public class MyHashTable <K, V> {
             }
             head = head.next;
         }
+
+        head = chainArray[index];
+        HashNode<K, V> newNode = new HashNode<>(key, value);
+        newNode.next = head;
+        chainArray[index] = newNode;
+        size++;
     }
     public V get(K key) {
         int index = hash(key);
@@ -93,6 +99,8 @@ public class MyHashTable <K, V> {
         return null;
     }
 
-
+    public boolean contains(K key) {
+        return get(key) != null;
+    }
 
 }
