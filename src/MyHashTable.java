@@ -19,6 +19,20 @@ public class MyHashTable <K, V> {
     private int M = 11;
     private int size;
 
+    public MyHashTable() {
+        chainArray = new HashNode[M];
+        size = 0;
+    }
+
+    public MyHashTable(int M) {
+        this.M = M;
+        chainArray = new HashNode[M];
+        size = 0;
+    }
+
+
+
+
 
 
 
