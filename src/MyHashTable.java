@@ -1,4 +1,4 @@
-public class MyHashTable <K, V> {
+public class MyHashTable<K, V> {
     private class HashNode<K, V> {
         private K key;
         private V value;
@@ -11,7 +11,7 @@ public class MyHashTable <K, V> {
 
         @Override
         public String toString() {
-            return "{" + key + ", " + value + "}";
+            return "{" + key + " " + value + "}";
         }
     }
 
@@ -31,12 +31,13 @@ public class MyHashTable <K, V> {
     }
 
     private int hash(K key) {
-        return (key.hashCode() & 0x7fffffff) % M;
+        return Math.abs(key.hashCode()) % M;
     }
 
     public void put(K key, V value) {
         int index = hash(key);
         HashNode<K, V> head = chainArray[index];
+
         while (head != null) {
             if (head.key.equals(key)) {
                 head.value = value;
@@ -45,19 +46,19 @@ public class MyHashTable <K, V> {
             head = head.next;
         }
 
+        size++;
         head = chainArray[index];
         HashNode<K, V> newNode = new HashNode<>(key, value);
         newNode.next = head;
         chainArray[index] = newNode;
-        size++;
     }
+
     public V get(K key) {
         int index = hash(key);
         HashNode<K, V> head = chainArray[index];
         while (head != null) {
-            if (head.key.equals(key)) {
+            if (head.key.equals(key))
                 return head.value;
-            }
             head = head.next;
         }
         return null;
@@ -78,7 +79,6 @@ public class MyHashTable <K, V> {
                 size--;
                 return head.value;
             }
-
             prev = head;
             head = head.next;
         }
@@ -86,21 +86,41 @@ public class MyHashTable <K, V> {
         return null;
     }
 
-    public K getKey(V value) {
-        for (int i = 0; i < M; i++) {
-            HashNode<K, V> head = chainArray[i];
+    public boolean contains(V value) {
+        for (HashNode<K, V> head : chainArray) {
             while (head != null) {
-                if (head.value.equals(value)) {
+                if (head.value.equals(value))
+                    return true;
+                head = head.next;
+            }
+        }
+        return false;
+    }
+
+    public K getKey(V value) {
+        for (HashNode<K, V> head : chainArray) {
+            while (head != null) {
+                if (head.value.equals(value))
                     return head.key;
-                }
                 head = head.next;
             }
         }
         return null;
     }
 
-    public boolean contains(K key) {
-        return get(key) != null;
+    public int size() {
+        return size;
     }
 
+    public void printBuckets() {
+        for (int i = 0; i < chainArray.length; i++) {
+            System.out.print("Bucket " + i + ": ");
+            HashNode<K, V> head = chainArray[i];
+            while (head != null) {
+                System.out.print(head + " -> ");
+                head = head.next;
+            }
+            System.out.println("null");
+        }
+    }
 }
